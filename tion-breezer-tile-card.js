@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.8.5";
+const TION_BREEZER_TILE_CARD_VERSION = "0.8.6";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -173,6 +173,7 @@ class TionBreezerTileCard extends HTMLElement {
 
         ha-ripple {
           z-index: 2;
+          border-radius: var(--ha-card-border-radius, 12px);
         }
 
         ha-card.off {
