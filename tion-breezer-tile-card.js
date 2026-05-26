@@ -190,7 +190,6 @@ class TionBreezerTileCard extends HTMLElement {
 
         ha-card.fan:hover,
         ha-card.heat:hover {
-          --breezer-chip: color-mix(in srgb, var(--breezer-state-color) 8%, var(--secondary-background-color));
           border-color: var(--breezer-state-color);
           border-color: color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border));
         }
@@ -198,6 +197,19 @@ class TionBreezerTileCard extends HTMLElement {
         ha-card.fan:hover::before,
         ha-card.heat:hover::before {
           opacity: 1;
+        }
+
+        ha-card.fan:hover .co2-row,
+        ha-card.fan:hover .temperature-row,
+        ha-card.fan:hover .speed-row,
+        ha-card.fan:hover .mode-row,
+        ha-card.fan:hover button,
+        ha-card.heat:hover .co2-row,
+        ha-card.heat:hover .temperature-row,
+        ha-card.heat:hover .speed-row,
+        ha-card.heat:hover .mode-row,
+        ha-card.heat:hover button {
+          background: color-mix(in srgb, var(--breezer-state-color) 8%, var(--secondary-background-color));
         }
 
         ha-card.unavailable {
