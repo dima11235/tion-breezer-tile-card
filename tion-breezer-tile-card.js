@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.8.0";
+const TION_BREEZER_TILE_CARD_VERSION = "0.8.1";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -190,6 +190,7 @@ class TionBreezerTileCard extends HTMLElement {
 
         ha-card.fan:hover,
         ha-card.heat:hover {
+          --breezer-chip: color-mix(in srgb, var(--breezer-state-color) 8%, var(--secondary-background-color));
           border-color: var(--breezer-state-color);
           border-color: color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border));
         }
