@@ -190,7 +190,6 @@ class TionBreezerTileCard extends HTMLElement {
 
         ha-card.fan:hover,
         ha-card.heat:hover {
-          border-color: var(--breezer-state-color);
           border-color: color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border));
         }
 
