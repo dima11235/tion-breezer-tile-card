@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.8.2";
+const TION_BREEZER_TILE_CARD_VERSION = "0.8.3";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
