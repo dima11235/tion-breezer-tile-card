@@ -43,7 +43,7 @@ type: module
 
 ```yaml
 type: custom:tion-breezer-tile-card
-entity: climate.brizer_masha
+entity: climate.brizer_bedroom
 ```
 
 Все связанные entity вычисляются автоматически по схеме именования ESPHome-пакета.
@@ -54,23 +54,23 @@ entity: climate.brizer_masha
 
 ```yaml
 type: custom:tion-breezer-tile-card
-entity: climate.brizer_masha
+entity: climate.brizer_bedroom
 
 # Опциональное имя (по умолчанию — friendly_name климата)
-name: Бризер Маша
+name: Бризер спальня
 
 # Переопределение отдельных entity
 # (нужно только если схема именования отличается от стандартной)
 entities:
-  climate: climate.brizer_masha
-  power: switch.brizer_masha_power_mode
-  heater: switch.brizer_masha_heater_mode
-  heaterTemperature: number.brizer_masha_heater_temperature
-  fanSpeed: sensor.brizer_masha_fan_speed
-  minFanSpeed: number.brizer_masha_min_fan_speed
-  maxFanSpeed: number.brizer_masha_max_fan_speed
-  targetCo2: number.brizer_masha_target_co2
-  currentCo2: sensor.brizer_masha_current_co2
+  climate: climate.brizer_bedroom
+  power: switch.brizer_bedroom_power_mode
+  heater: switch.brizer_bedroom_heater_mode
+  heaterTemperature: number.brizer_bedroom_heater_temperature
+  fanSpeed: sensor.brizer_bedroom_fan_speed
+  minFanSpeed: number.brizer_bedroom_min_fan_speed
+  maxFanSpeed: number.brizer_bedroom_max_fan_speed
+  targetCo2: number.brizer_bedroom_target_co2
+  currentCo2: sensor.brizer_bedroom_current_co2
 
 # Действие при нажатии на заголовок карточки
 # По умолчанию: more-info климата
@@ -82,19 +82,19 @@ tap_action:
 
 ```yaml
 type: custom:tion-breezer-tile-card
-entity: climate.brizer_masha
+entity: climate.brizer_bedroom
 tap_action:
   action: fire-dom-event
   browser_mod:
     service: browser_mod.popup
     data:
-      title: Бризер Маша
+      title: Бризер спальня
       content:
         type: entities
         entities:
-          - entity: switch.brizer_masha_power_mode
+          - entity: switch.brizer_bedroom_power_mode
             name: Включение
-          - entity: switch.brizer_masha_heater_mode
+          - entity: switch.brizer_bedroom_heater_mode
             name: Подогрев
 ```
 
