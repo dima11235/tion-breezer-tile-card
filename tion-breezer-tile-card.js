@@ -165,15 +165,14 @@ class TionBreezerTileCard extends HTMLElement {
           color: var(--primary-text-color);
           overflow: hidden;
           position: relative;
+          z-index: 0;
         }
 
-        ha-card::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: color-mix(in srgb, var(--breezer-state-color) 8%, transparent);
-          opacity: 0;
-          pointer-events: none;
+        ha-ripple {
+          z-index: 2;
+          --ha-ripple-color: var(--breezer-state-color);
+          --ha-ripple-hover-opacity: 0.08;
+          --ha-ripple-pressed-opacity: 0.16;
         }
 
         ha-card.off {
@@ -191,24 +190,6 @@ class TionBreezerTileCard extends HTMLElement {
         ha-card.fan:hover,
         ha-card.heat:hover {
           border-color: color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border));
-        }
-
-        ha-card.fan:hover::before,
-        ha-card.heat:hover::before {
-          opacity: 1;
-        }
-
-        ha-card.fan:hover .co2-row,
-        ha-card.fan:hover .temperature-row,
-        ha-card.fan:hover .speed-row,
-        ha-card.fan:hover .mode-row,
-        ha-card.fan:hover button,
-        ha-card.heat:hover .co2-row,
-        ha-card.heat:hover .temperature-row,
-        ha-card.heat:hover .speed-row,
-        ha-card.heat:hover .mode-row,
-        ha-card.heat:hover button {
-          background: color-mix(in srgb, var(--breezer-state-color) 8%, var(--secondary-background-color));
         }
 
         ha-card.unavailable {
@@ -473,6 +454,7 @@ class TionBreezerTileCard extends HTMLElement {
         }
       </style>
       <ha-card>
+        <ha-ripple></ha-ripple>
         <div class="error" hidden>
           <div class="error-title">Ошибка конфигурации бризера</div>
           <div class="error-message"></div>
@@ -534,6 +516,7 @@ class TionBreezerTileCard extends HTMLElement {
     const $ = (selector) => this.shadowRoot.querySelector(selector);
     this._els = {
       card: $("ha-card"),
+      ripple: $("ha-ripple"),
       content: $(".card"),
       error: $(".error"),
       errorMessage: $(".error-message"),
@@ -564,7 +547,10 @@ class TionBreezerTileCard extends HTMLElement {
 
     const configError = this._configError();
     this._showConfigError(configError);
-    if (configError) return;
+    if (configError) {
+      this._els.ripple.disabled = true;
+      return;
+    }
 
     const climateState = this._state(this._entities.climate)?.state;
     const available = Boolean(climateState && climateState !== "unknown" && climateState !== "unavailable");
@@ -576,6 +562,7 @@ class TionBreezerTileCard extends HTMLElement {
     const stateClass = !available ? "unavailable" : powerOn && heaterOn ? "heat" : powerOn ? "fan" : "off";
 
     this._els.card.className = stateClass;
+    this._els.ripple.disabled = stateClass !== "fan" && stateClass !== "heat";
     this._els.name.textContent = this._name();
     this._updateSecondary();
     this._els.badge.textContent = this._fanSpeedText();

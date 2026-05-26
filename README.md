@@ -1,6 +1,7 @@
 # Tion Breezer Tile Card
 
-Кастомная карточка для управления бризером [Tion](https://tion.ru/) в Home Assistant.  
+Кастомная карточка для управления бризером [Tion](https://tion.ru/) в Home Assistant.
+Используется с ESPHome-пакетом из репозитория [esphome-tion-ha-lovelace](https://github.com/dima11235/esphome-tion-ha-lovelace).
 Стилизована под стандартные tile-карточки HA.
 
 ![preview](https://raw.githubusercontent.com/dima11235/tion-breezer-tile-card/main/images/preview.png)
@@ -46,7 +47,7 @@ type: custom:tion-breezer-tile-card
 entity: climate.brizer_bedroom
 ```
 
-Все связанные entity вычисляются автоматически по схеме именования ESPHome-пакета.
+Все связанные entity вычисляются автоматически по схеме именования ESPHome-пакета из репозитория [esphome-tion-ha-lovelace](https://github.com/dima11235/esphome-tion-ha-lovelace).
 
 ---
 
