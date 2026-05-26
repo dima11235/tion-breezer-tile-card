@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.8.3";
+const TION_BREEZER_TILE_CARD_VERSION = "0.8.4";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -171,8 +171,8 @@ class TionBreezerTileCard extends HTMLElement {
         ha-ripple {
           z-index: 2;
           --ha-ripple-color: var(--breezer-state-color);
-          --ha-ripple-hover-opacity: 0.08;
-          --ha-ripple-pressed-opacity: 0.16;
+          --ha-ripple-hover-opacity: var(--breezer-ripple-hover-opacity, 0.08);
+          --ha-ripple-pressed-opacity: var(--breezer-ripple-pressed-opacity, 0.16);
         }
 
         ha-card.off {
@@ -189,7 +189,7 @@ class TionBreezerTileCard extends HTMLElement {
 
         ha-card.fan:hover,
         ha-card.heat:hover {
-          border-color: color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border));
+          border-color: var(--breezer-hover-border-color, color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border)));
         }
 
         ha-card.unavailable {
