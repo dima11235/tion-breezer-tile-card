@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.8.7";
+const TION_BREEZER_TILE_CARD_VERSION = "0.9.0";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -27,6 +27,7 @@ class TionBreezerTileCard extends HTMLElement {
       maxFanSpeed: this._configValue("maxFanSpeed", "max_fan_speed_entity", `number.${this._breezerPrefix}_max_fan_speed`),
       targetCo2: this._configValue("targetCo2", "target_co2_entity", `number.${this._breezerPrefix}_target_co2`),
       currentCo2: this._configValue("currentCo2", "current_co2_entity", `sensor.${this._breezerPrefix}_current_co2`),
+      airIntake: this._configValue("airIntake", "air_intake_entity", `switch.${this._breezerPrefix}_air_intake`),
     };
     this._requiredEntities = [
       ["climate", this._entities.climate],
@@ -449,6 +450,41 @@ class TionBreezerTileCard extends HTMLElement {
           --mdc-icon-size: 19px;
         }
 
+        .bottom-row {
+          display: flex;
+          gap: 8px;
+        }
+
+        .bottom-row .mode-row {
+          flex: 3;
+        }
+
+        .intake-row {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr);
+          height: 40px;
+          border-radius: 12px;
+          background: var(--breezer-chip);
+          flex: 1;
+        }
+
+        .intake-button {
+          font-size: 19px;
+          border-radius: 12px;
+        }
+
+        .intake-button ha-icon {
+          --mdc-icon-size: 19px;
+        }
+
+        .intake-button.open ha-icon {
+          color: var(--success-color, #4caf50);
+        }
+
+        .intake-button.closed ha-icon {
+          color: var(--error-color, #f44336);
+        }
+
         .co2-row ha-icon,
         .temperature-row ha-icon {
           --mdc-icon-size: 18px;
@@ -499,16 +535,23 @@ class TionBreezerTileCard extends HTMLElement {
             <button type="button" data-action="temperature-up" aria-label="Увеличить температуру нагрева"><ha-icon icon="mdi:plus"></ha-icon></button>
           </div>
 
-          <div class="mode-row">
-            <button type="button" class="mode-button" data-action="power" aria-label="Выключить бризер" aria-pressed="false">
-              <ha-icon icon="mdi:fan-off"></ha-icon>
-            </button>
-            <button type="button" class="mode-button" data-action="heat" aria-label="Режим нагрева" aria-pressed="false">
-              <ha-icon icon="mdi:fire"></ha-icon>
-            </button>
-            <button type="button" class="mode-button" data-action="fan" aria-label="Режим вентиляции" aria-pressed="false">
-              <ha-icon icon="mdi:fan"></ha-icon>
-            </button>
+          <div class="bottom-row">
+            <div class="mode-row">
+              <button type="button" class="mode-button" data-action="power" aria-label="Выключить бризер" aria-pressed="false">
+                <ha-icon icon="mdi:fan-off"></ha-icon>
+              </button>
+              <button type="button" class="mode-button" data-action="heat" aria-label="Режим нагрева" aria-pressed="false">
+                <ha-icon icon="mdi:fire"></ha-icon>
+              </button>
+              <button type="button" class="mode-button" data-action="fan" aria-label="Режим вентиляции" aria-pressed="false">
+                <ha-icon icon="mdi:fan"></ha-icon>
+              </button>
+            </div>
+            <div class="intake-row" hidden>
+              <button type="button" class="intake-button" data-action="air-intake" aria-label="Заслонка воздухозабора" aria-pressed="false">
+                <ha-icon icon="mdi:valve-closed"></ha-icon>
+              </button>
+            </div>
           </div>
         </div>
       </ha-card>
@@ -540,6 +583,9 @@ class TionBreezerTileCard extends HTMLElement {
       powerButton: $('[data-action="power"]'),
       heatButton: $('[data-action="heat"]'),
       fanButton: $('[data-action="fan"]'),
+      intakeRow: $(".intake-row"),
+      intakeButton: $('[data-action="air-intake"]'),
+      intakeIcon: $('[data-action="air-intake"] ha-icon'),
     };
   }
 
@@ -589,6 +635,23 @@ class TionBreezerTileCard extends HTMLElement {
     this._updateModeButton(this._els.powerButton, !powerOn, disabled);
     this._updateModeButton(this._els.heatButton, powerOn && heaterOn, disabled);
     this._updateModeButton(this._els.fanButton, powerOn && !heaterOn, disabled);
+
+    this._updateIntakeButton(disabled);
+  }
+
+  _updateIntakeButton(disabled) {
+    const state = this._state(this._entities.airIntake)?.state;
+    const visible = state === "on" || state === "off";
+    this._els.intakeRow.hidden = !visible;
+    if (!visible) return;
+
+    const open = state === "on";
+    this._els.intakeButton.classList.toggle("open", open);
+    this._els.intakeButton.classList.toggle("closed", !open);
+    this._els.intakeButton.setAttribute("aria-pressed", open ? "true" : "false");
+    this._els.intakeButton.setAttribute("aria-label", open ? "Заслонка открыта" : "Заслонка закрыта");
+    this._els.intakeIcon.setAttribute("icon", open ? "mdi:valve-open" : "mdi:valve-closed");
+    this._setDisabled(this._els.intakeButton, disabled);
   }
 
   _configError() {
@@ -735,6 +798,11 @@ class TionBreezerTileCard extends HTMLElement {
 
     if (action === "heat") {
       this._hass.callService("switch", "turn_on", { entity_id: this._entities.heater });
+      return;
+    }
+
+    if (action === "air-intake") {
+      this._hass.callService("switch", "toggle", { entity_id: this._entities.airIntake });
     }
   }
 
