@@ -15,6 +15,7 @@
 - Настройка целевого CO₂ кнопками ±
 - Настройка температуры нагрева (показывается только в режиме heat)
 - Переключение режимов: выкл / нагрев / вентиляция
+- Опциональная кнопка управления заслонкой воздухозабора (open/closed)
 - Цветовая индикация состояния карточки
 - Настраиваемый `tap_action` (по умолчанию — more-info климата)
 
@@ -72,6 +73,7 @@ entities:
   maxFanSpeed: number.brizer_bedroom_max_fan_speed
   targetCo2: number.brizer_bedroom_target_co2
   currentCo2: sensor.brizer_bedroom_current_co2
+  airIntake: switch.brizer_bedroom_air_intake  # опционально, см. ниже
 
 # Действие при нажатии на заголовок карточки
 # По умолчанию: more-info климата
@@ -101,10 +103,34 @@ tap_action:
 
 ---
 
+## Кнопка заслонки воздухозабора (опционально)
+
+Если в HA есть `switch.{prefix}_air_intake` (или указан через `entities.airIntake` /
+устаревший `air_intake_entity`), карточка автоматически отрисовывает дополнительную
+кнопку в нижнем ряду рядом с кнопками режимов.
+
+Поведение:
+
+- **Open** (`switch.state == on`) — заслонка открыта, идёт забор свежего воздуха
+  с улицы. Кнопка подсвечивается цветом активного режима бризера, иконка
+  `mdi:weather-windy` — белая.
+- **Closed** (`switch.state == off`) — заслонка закрыта, режим рециркуляции.
+  Кнопка с нейтральным фоном, иконка `mdi:rotate-3d-variant` — красная.
+- Если switch отсутствует, недоступен (`unavailable`) или его state неизвестен —
+  кнопка не отображается, карточка работает в прежнем виде.
+- Клик переключает состояние switch (`switch.toggle`).
+
+Требует прошивки бризера ESPHome-пакетом
+[tion_intake_3s.yaml / tion_intake_4s.yaml](https://github.com/dima11235/esphome-tion-ha-lovelace)
+(зависит от модели — 3S/4S).
+
+---
+
 ## Схема именования entity
 
 Карточка автоматически выводит entity из имени климата по схеме:  
-`climate.{prefix}` → `switch.{prefix}_power_mode`, `sensor.{prefix}_fan_speed` и т.д.
+`climate.{prefix}` → `switch.{prefix}_power_mode`, `sensor.{prefix}_fan_speed`,
+`switch.{prefix}_air_intake` (опционально) и т.д.
 
 Используется с ESPHome-пакетом из репозитория [esphome-tion-ha-lovelace](https://github.com/dima11235/esphome-tion-ha-lovelace).
 
