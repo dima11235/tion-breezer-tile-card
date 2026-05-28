@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.9.0";
+const TION_BREEZER_TILE_CARD_VERSION = "0.9.9";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -452,7 +452,7 @@ class TionBreezerTileCard extends HTMLElement {
 
         .bottom-row {
           display: flex;
-          gap: 8px;
+          gap: 2px;
         }
 
         .bottom-row .mode-row {
@@ -477,8 +477,13 @@ class TionBreezerTileCard extends HTMLElement {
           --mdc-icon-size: 19px;
         }
 
+        .intake-button.open::before {
+          background-color: var(--breezer-state-color);
+          opacity: 1;
+        }
+
         .intake-button.open ha-icon {
-          color: var(--success-color, #4caf50);
+          color: var(--text-primary-color, #ffffff);
         }
 
         .intake-button.closed ha-icon {
@@ -549,7 +554,7 @@ class TionBreezerTileCard extends HTMLElement {
             </div>
             <div class="intake-row" hidden>
               <button type="button" class="intake-button" data-action="air-intake" aria-label="Заслонка воздухозабора" aria-pressed="false">
-                <ha-icon icon="mdi:valve-closed"></ha-icon>
+                <ha-icon icon="mdi:rotate-3d-variant"></ha-icon>
               </button>
             </div>
           </div>
@@ -650,7 +655,7 @@ class TionBreezerTileCard extends HTMLElement {
     this._els.intakeButton.classList.toggle("closed", !open);
     this._els.intakeButton.setAttribute("aria-pressed", open ? "true" : "false");
     this._els.intakeButton.setAttribute("aria-label", open ? "Заслонка открыта" : "Заслонка закрыта");
-    this._els.intakeIcon.setAttribute("icon", open ? "mdi:valve-open" : "mdi:valve-closed");
+    this._els.intakeIcon.setAttribute("icon", open ? "mdi:weather-windy" : "mdi:rotate-3d-variant");
     this._setDisabled(this._els.intakeButton, disabled);
   }
 
