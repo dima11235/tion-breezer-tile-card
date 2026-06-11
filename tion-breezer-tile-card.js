@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "0.9.9";
+const TION_BREEZER_TILE_CARD_VERSION = "1.0.0";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -623,6 +623,11 @@ class TionBreezerTileCard extends HTMLElement {
     this._setDisabled(this._els.co2Down, disabled);
     this._setDisabled(this._els.co2Up, disabled);
 
+    const co2Available = this._num(this._entities.currentCo2) !== null;
+    if (!co2Available && this._pendingSpeed !== undefined) {
+      this._clearPendingSpeed();
+    }
+
     this._els.speedButtons.forEach((button) => {
       const speed = Number(button.dataset.speed);
       const active = minFanSpeed !== null && maxFanSpeed !== null && minFanSpeed <= speed && speed <= maxFanSpeed;
@@ -813,6 +818,12 @@ class TionBreezerTileCard extends HTMLElement {
 
   _handleSpeedSelection(speed) {
     if (!Number.isFinite(speed)) return;
+
+    const co2Available = this._num(this._entities.currentCo2) !== null;
+    if (!co2Available) {
+      this._setFanSpeedRange(speed, speed);
+      return;
+    }
 
     if (this._pendingSpeed !== undefined) {
       const min = Math.min(this._pendingSpeed, speed);
