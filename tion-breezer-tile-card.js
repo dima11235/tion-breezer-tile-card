@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "1.0.1";
+const TION_BREEZER_TILE_CARD_VERSION = "1.0.2";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -637,9 +637,16 @@ class TionBreezerTileCard extends HTMLElement {
       this._clearPendingSpeed();
     }
 
+    // Нормализуем границы: ESPHome публикует min и max двумя отдельными
+    // обновлениями, между которыми возможно промежуточное min > max (например
+    // при смене скорости с пульта). Без Math.min/max в такой момент ни одна
+    // кнопка не подсветилась бы («ни одна скорость не выбрана»).
+    const rangeReady = minFanSpeed !== null && maxFanSpeed !== null;
+    const lo = rangeReady ? Math.min(minFanSpeed, maxFanSpeed) : null;
+    const hi = rangeReady ? Math.max(minFanSpeed, maxFanSpeed) : null;
     this._els.speedButtons.forEach((button) => {
       const speed = Number(button.dataset.speed);
-      const active = minFanSpeed !== null && maxFanSpeed !== null && minFanSpeed <= speed && speed <= maxFanSpeed;
+      const active = rangeReady && lo <= speed && speed <= hi;
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", active ? "true" : "false");
       this._setDisabled(button, disabled);
