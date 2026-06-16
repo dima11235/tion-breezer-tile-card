@@ -1,4 +1,4 @@
-const TION_BREEZER_TILE_CARD_VERSION = "1.0.0";
+const TION_BREEZER_TILE_CARD_VERSION = "1.0.1";
 const TION_BREEZER_TILE_CARD_TAG = "tion-breezer-tile-card";
 
 console.info(`[${TION_BREEZER_TILE_CARD_TAG}] loaded`, {
@@ -189,9 +189,11 @@ class TionBreezerTileCard extends HTMLElement {
           --breezer-state-color: var(--state-climate-heat-color, #ff8c00);
         }
 
-        ha-card.fan:hover,
-        ha-card.heat:hover {
-          border-color: var(--breezer-hover-border-color, color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border)));
+        @media (hover: hover) {
+          ha-card.fan:hover,
+          ha-card.heat:hover {
+            border-color: var(--breezer-hover-border-color, color-mix(in srgb, var(--breezer-state-color) 18%, var(--breezer-card-border)));
+          }
         }
 
         ha-card.unavailable {
@@ -314,8 +316,10 @@ class TionBreezerTileCard extends HTMLElement {
           -webkit-tap-highlight-color: transparent;
         }
 
-        .secondary-part:hover {
-          color: var(--primary-text-color);
+        @media (hover: hover) {
+          .secondary-part:hover {
+            color: var(--primary-text-color);
+          }
         }
 
         .secondary-separator,
@@ -396,8 +400,13 @@ class TionBreezerTileCard extends HTMLElement {
           transition: background-color ease-in-out 180ms, opacity ease-in-out 80ms;
         }
 
-        button:not(.active):not(:disabled):hover::before {
-          opacity: 0.2;
+        /* hover только на устройствах с реальным указателем (мышь): на тач
+           :hover залипает на последней нажатой кнопке и оставляет слабую
+           подсветку на кнопке, с которой переключили скорость. */
+        @media (hover: hover) {
+          button:not(.active):not(:disabled):hover::before {
+            opacity: 0.2;
+          }
         }
 
         button > * {
